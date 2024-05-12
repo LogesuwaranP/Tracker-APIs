@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Azure.Cosmos.Serialization.HybridRow;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,16 @@ namespace Tracker.Infrastructure.Repositories
     {
         private readonly TrackerContext _dbContext;
 
+         public class Result
+        {
+            public Guid Id { get; set; }
+            public string CategoryTitle { get; set; }
+            public decimal? Allocated { get; set; }
+            public decimal? Spent { get; set; }
+            public decimal? Remaining { get; set; }
+            public List<Expense>? Expense { get; set; }
+        }
+        
         public CategoryRepository(TrackerContext dbContext)
         {
             _dbContext = dbContext;
@@ -51,6 +62,29 @@ namespace Tracker.Infrastructure.Repositories
                 _dbContext.Categories.Remove(category);
                 await _dbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<object>> GetAllData()
+        {
+
+            List<Result> result =
+            _dbContext.Categories
+                .GroupJoin(
+                    _dbContext.Expense,
+                    category => category.Id,
+                    expense => expense.ExpenseType,
+                    (category, expenseGroup) => new Result
+                    {
+                        Id = category.Id,
+                        CategoryTitle = category.CategoryTitle,
+                        Allocated = category.Allocated,
+                        Spent = category.Spent,
+                        Remaining = category.Remaining,
+                        Expense = expenseGroup.ToList()
+                    })
+                .ToList();
+
+            return result.Cast<object>();
         }
     }
 }

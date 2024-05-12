@@ -21,6 +21,7 @@ namespace Tracker.Domain.Service.ExpenseService
             _dbContextExpense = dbContextExpense;
             _mapper = mapper;
         }
+
         public IEnumerable<ExpenseResponseDto> GetExpenseList()
         {
             var data = _dbContextExpense.Expense.ToList();

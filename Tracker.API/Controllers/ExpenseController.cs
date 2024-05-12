@@ -26,7 +26,7 @@ namespace Tracker.API.Controllers
         }
         // GET: api/<ExpenseController>
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         [ResponseCache(Duration = 15)]
         public async Task<IActionResult> GetAll()
         {
@@ -59,73 +59,74 @@ namespace Tracker.API.Controllers
         }
 
         ///{startDate}/{endDate}
-        [HttpGet]
-        [Route("start={startDate:datetime}&end={endDate:datetime}")]
-        public async Task<IActionResult> GetByDates(DateTime startDate, DateTime endDate)
-        {
-            var expenseList = _expenseFilter.FilterDates(startDate, endDate);
+        //[HttpGet]
+        //[Route("start={startDate:datetime}&end={endDate:datetime}")]
+        //public async Task<IActionResult> GetByDates(DateTime startDate, DateTime endDate)
+        //{
+        //    var expenseList = _expenseFilter.FilterDates(startDate, endDate);
 
-            if (expenseList != null)
-            {
-                return Ok(expenseList);
-            }
-            else
-            {
-                return NotFound("No Expense Found");
-            }
-        }
+        //    if (expenseList != null)
+        //    {
+        //        return Ok(expenseList);
+        //    }
+        //    else
+        //    {
+        //        return NotFound("No Expense Found");
+        //    }
+        //}
 
-        [HttpGet]
-        [Route("{month}")]
-        public async Task<IActionResult> GetByMonth(int month)
-        {
-            var expenseList = _expenseFilter.FilterByMonth(month);
+        //[HttpGet]
+        //[Route("{month}")]
+        //public async Task<IActionResult> GetByMonth(int month)
+        //{
+        //    var expenseList = _expenseFilter.FilterByMonth(month);
 
-            if (expenseList != null)
-            {
-                return Ok(expenseList);
-            }
-            else
-            {
-                return NotFound("No Expense Found");
-            }
-        }
+        //    if (expenseList != null)
+        //    {
+        //        return Ok(expenseList);
+        //    }
+        //    else
+        //    {
+        //        return NotFound("No Expense Found");
+        //    }
+        //}
 
-        [HttpGet]
-        [Route("{type}")]
-        public async Task<IActionResult> GetByType(Guid type)
-        {
-            var expenseList = _expenseFilter.FilterByType(type);
+        //[HttpGet]
+        //[Route("{type}")]
+        //public async Task<IActionResult> GetByType(Guid type)
+        //{
+        //    var expenseList = _expenseFilter.FilterByType(type);
 
-            if (expenseList != null)
-            {
-                return Ok(expenseList);
-            }
-            else
-            {
-                return NotFound("No Expense Found");
-            }
-        }
+        //    if (expenseList != null)
+        //    {
+        //        return Ok(expenseList);
+        //    }
+        //    else
+        //    {
+        //        return NotFound("No Expense Found");
+        //    }
+        //}
 
-        [HttpGet]
-        [Route("groupbytype")]
-        public async Task<IActionResult> Groupbytype()
-        {
-            var expenseList = _expenseFilter.Groupbytype();
+        //[HttpGet]
+        //[Route("groupbytype")]
+        //public async Task<IActionResult> Groupbytype()
+        //{
+        //    var expenseList = _expenseFilter.Groupbytype();
 
-            if (expenseList != null)
-            {
-                return Ok(expenseList);
-            }
-            else
-            {
-                return NotFound("No Expense Found");
-            }
-        }
+        //    if (expenseList != null)
+        //    {
+        //        return Ok(expenseList);
+        //    }
+        //    else
+        //    {
+        //        return NotFound("No Expense Found");
+        //    }
+        //}
 
 
 
         // POST api/<ExpenseController>
+
         [HttpPost]
         public async Task<IActionResult> Post ([FromBody] ExpenseRequestDto expense)
         {

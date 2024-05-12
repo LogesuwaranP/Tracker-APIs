@@ -6,7 +6,7 @@ namespace Tracker.Data.Entities
     {
         [Key]
         public Guid ExpenseId { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid ExpenseType { get; set; }
         public string ExpenseCategory { get; set; } = string.Empty;
         public string ExpenseTitle { get; set; } = string.Empty;
         public int ExpenseAmount { get; set; }

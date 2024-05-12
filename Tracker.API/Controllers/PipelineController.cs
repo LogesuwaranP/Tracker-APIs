@@ -8,72 +8,26 @@ using Tracker.Domain.Repository;
 
 namespace Tracker.API.Controllers
 {
-    [Route("api/")]
+    [Route("api")]
     [ApiController]
     public class PipelineController : ControllerBase
     {
-        private readonly IGroupRepository _groupRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public PipelineController(IGroupRepository groupRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public PipelineController(ICategoryRepository categoryRepository, IMapper mapper)
         {
-            _groupRepository = groupRepository;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        [Route("All")]
-        public async Task<IActionResult> GetAllByGroup()
+        [Route("/all")]
+        public async Task<IActionResult> GetAll()
         {
-            var categoryList = await _groupRepository.GetAllGroups();
+            var categoryList = await _categoryRepository.GetAllData();
 
             return Ok(categoryList);
-        }
-
-        [HttpGet]
-        [Route("groups")]
-        public async Task<IActionResult> GetAllExpenses()
-        {
-            var categoryList = await _groupRepository.GetAllGroups();
-            
-            return Ok(categoryList);
-        }
-
-        // GET api/<PipelineController>/5
-        [HttpGet("/group/{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var category = await _groupRepository.GetGroupById(id);
-
-            return Ok(category);
-        }
-
-        // POST api/<PipelineController>
-        [HttpPost]
-        [Route("/group")]
-        public async Task<OkObjectResult> PostAsync([FromBody] GroupRequest request)
-        {
-
-            await _groupRepository.AddGroup(_mapper.Map<Group>(request));
-
-            return Ok("added successfully");
-        }
-
-        // PUT api/<PipelineController>/5
-        [HttpPut("/group/{id}")]
-        public async Task<OkObjectResult> Put(int id, [FromBody] GroupRequest request)
-        {
-            await _groupRepository.UpdateGroup(_mapper.Map<Group>(request));
-
-            return Ok("Updated successfully");
-        }
-
-        // DELETE api/<PipelineController>/5
-        [HttpDelete("/group/{id}")]
-        public void Delete(int id)
-        {
         }
 
         [HttpGet]

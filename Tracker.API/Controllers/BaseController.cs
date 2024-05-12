@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Tracker.API.ResponseModels;
-using Tracker.Data.Entities;
-using Tracker.Domain.Service.FinancialProductService;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Tracker.API.Controllers
 {
