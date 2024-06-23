@@ -20,7 +20,10 @@ namespace Tracker.Domain.UseCase
 
         public async Task<Guid> Handle(AddDueCommand request, CancellationToken cancellationToken)
         {
-            if (request.dueRequst == null) { return Guid.Empty; }
+            if (request.dueRequst == null) 
+            { 
+                return Guid.Empty; 
+            }
 
             request.dueRequst.Id = Guid.NewGuid();
             var data = await _dueRepository.AddTaskAsync(request.dueRequst);
