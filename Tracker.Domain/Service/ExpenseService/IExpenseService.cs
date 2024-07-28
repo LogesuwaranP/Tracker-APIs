@@ -1,5 +1,6 @@
 ﻿
 using Tracker.Data.Entities;
+using Tracker.Data.ResponseModels;
 
 namespace Tracker.Domain.Service.ExpenseService
 {
@@ -10,5 +11,7 @@ namespace Tracker.Domain.Service.ExpenseService
         public Expense GetExpenseById(Guid id);
         public Expense UpdateExpense(Guid id, ExpenseRequestDto expense);
         public Expense DeleteExpense();
+
+        Task<List<ExpenseWithCategory>> GetExpensesWithCategoryAsync();
     }
 }

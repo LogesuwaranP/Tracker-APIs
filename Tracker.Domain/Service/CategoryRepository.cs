@@ -30,7 +30,7 @@ namespace Tracker.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategories()
+        public async Task<List<Category>> GetAllCategories()
         {
             return await _dbContext.Categories.ToListAsync();
         }
@@ -85,6 +85,20 @@ namespace Tracker.Infrastructure.Repositories
                 .ToList();
 
             return result.Cast<object>();
+        }
+
+        public async Task UpdateSpent(Guid id, decimal amount)
+        {
+            Category? category = await _dbContext.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException("No Category found for {id}");
+            }
+
+            category.Spent = category.Spent + amount;
+
+            await UpdateCategory(category);
         }
     }
 }

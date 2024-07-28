@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Tracker.API.RequestModels;
 using Tracker.Data.Entities;
 using Tracker.Domain.Repository;
+using Tracker.Domain.UseCase;
+using Tracker.Domain.UseCase.Mails;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,11 +18,13 @@ namespace Tracker.API.Controllers
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public PipelineController(ICategoryRepository categoryRepository, IMapper mapper)
+        public PipelineController(ICategoryRepository categoryRepository, IMapper mapper, IMediator mediator)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -34,7 +40,7 @@ namespace Tracker.API.Controllers
         [Route("/category")]
         public async Task<IActionResult> GetAllCategories()
         {
-            var categoryList = await _categoryRepository.GetAllCategories();
+            List<Category> categoryList = await _categoryRepository.GetAllCategories();
 
             return Ok(categoryList);
         }
@@ -44,7 +50,12 @@ namespace Tracker.API.Controllers
         [Route("/category/{id}")]
         public async Task<IActionResult> GetCategory(Guid id)
         {
-            var category = await _categoryRepository.GetCategoryById(id);
+            Category category = await _categoryRepository.GetCategoryById(id);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category Not Found for id {id}");
+            }
 
             return Ok(category);
         }
@@ -57,13 +68,22 @@ namespace Tracker.API.Controllers
 
             await _categoryRepository.AddCategory(_mapper.Map<Category>(request));
 
-            return Ok("added successfully");
+            return Ok(request);
         }
 
         // PUT api/<PipelineController>/5
         [HttpPut]
         [Route("/category/{id}")]
         public async Task<OkObjectResult> Put(int id, [FromBody] CategoryRequest request)
+        {
+            await _categoryRepository.UpdateCategory(_mapper.Map<Category>(request));
+
+            return Ok(request);
+        }
+
+        [HttpPatch]
+        [Route("/category/{id}")]
+        public async Task<OkObjectResult> Patch(Guid id, [FromBody] CategoryRequest request)
         {
             await _categoryRepository.UpdateCategory(_mapper.Map<Category>(request));
 
@@ -75,6 +95,15 @@ namespace Tracker.API.Controllers
         [Route("/category/{id}")]
         public void DeleteCategory(int id)
         {
+        }
+
+        [HttpPost]
+        [Route("/mails")]
+        public async Task<OkObjectResult> AddExpenseMail([FromBody] List<EmailDto> request)
+        {
+            await _mediator.Send(new AddMailsCommand { ExpenseMails = _mapper.Map<List<ExpenseMail>>(request) });
+
+            return Ok("Updated successfully");
         }
     }
 }

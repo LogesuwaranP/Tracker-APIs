@@ -10,5 +10,7 @@ namespace Tracker.Data.Context
         public DbSet<Expense> Expense { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Due> Dues { get; set; }
+        public DbSet<ExpenseMail> ExpenseMails { get; set; }
+
     }
 }

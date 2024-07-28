@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Tracker.Data.Entities;
+using Tracker.Domain.Repository;
 using Tracker.Domain.Service.ExpenseFilter;
 using Tracker.Domain.Service.ExpenseService;
+using Tracker.Infrastructure.Repositories;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,14 +18,19 @@ namespace Tracker.API.Controllers
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseService _expenseService;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IConfiguration _configuration;
         private readonly IExpenseFilter _expenseFilter;
 
-        public ExpenseController(IExpenseService expenseService, IConfiguration configuration, IExpenseFilter expenseFilter)
+        private readonly IMediator _mediator;
+
+        public ExpenseController(IExpenseService expenseService, IConfiguration configuration, IExpenseFilter expenseFilter, ICategoryRepository categoryRepository, IMediator mediator)
         {
             _expenseService = expenseService;
+            _categoryRepository = categoryRepository;
             _configuration = configuration;
             _expenseFilter = expenseFilter;
+            _mediator = mediator;
         }
         // GET: api/<ExpenseController>
         [HttpGet]
@@ -131,6 +139,10 @@ namespace Tracker.API.Controllers
         public async Task<IActionResult> Post ([FromBody] ExpenseRequestDto expense)
         {
             var result = _expenseService.AddExpense(expense);
+            if (result != null)
+            {
+                await _categoryRepository.UpdateSpent(expense.ExpenseType, expense.ExpenseAmount);
+            }
             return Ok(result);
         }
 
@@ -146,6 +158,22 @@ namespace Tracker.API.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet]
+        [Route("/withcategory")]
+        public async Task<IActionResult> GetExpenseWithCategoryType()
+        {
+            var expenseList = await _expenseService.GetExpensesWithCategoryAsync();
+
+            if (expenseList != null)
+            {
+                return Ok(expenseList);
+            }
+            else
+            {
+                return NotFound("No Expense Found");
+            }
         }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Tracker.Data.Context;
 using Tracker.Data.Entities;
+using Tracker.Data.ResponseModels;
 using Tracker.Domain.Service.ExpenseService;
 
 namespace Tracker.Domain.Service.ExpenseService
@@ -96,6 +99,32 @@ namespace Tracker.Domain.Service.ExpenseService
         public Expense DeleteExpense()
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task<List<ExpenseWithCategory>> GetExpensesWithCategoryAsync()
+        {
+            return await _dbContextExpense.Expense
+                .Join(_dbContextExpense.Categories,
+                      expense => expense.ExpenseType,
+                      category => category.Id,
+                      (expense, category) => new ExpenseWithCategory
+                      {
+                          ExpenseId = expense.ExpenseId,
+                          ExpenseType = expense.ExpenseType,
+                          ExpenseTitle = expense.ExpenseTitle,
+                          ExpenseAmount = expense.ExpenseAmount,
+                          ExpenseDate = expense.ExpenseDate,
+                          ExpenseDiscription = expense.ExpenseDiscription,
+                          ExpenseImage = expense.ExpenseImage,
+                          ExpenseTransaction = expense.ExpenseTransaction,
+                          ExpenseCreatedDate = expense.ExpenseCreatedDate,
+                          ExpenseModifiedDate = expense.ExpenseModifiedDate,
+                          ExpenseHide = expense.ExpenseHide,
+                          CategoryTitle = category.CategoryTitle,
+                          Color = category.Color
+
+                      }).ToListAsync();
         }
     }
 }
