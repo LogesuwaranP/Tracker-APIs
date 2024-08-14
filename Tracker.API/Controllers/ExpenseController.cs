@@ -141,7 +141,7 @@ namespace Tracker.API.Controllers
             var result = _expenseService.AddExpense(expense);
             if (result != null)
             {
-                await _categoryRepository.UpdateSpent(expense.ExpenseType, expense.ExpenseAmount);
+                await _categoryRepository.UpdateSpent(expense.CategoryId, expense.ExpenseAmount);
             }
             return Ok(result);
         }

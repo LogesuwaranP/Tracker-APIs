@@ -26,7 +26,7 @@ namespace Tracker.API.Extention
                 .ForMember(dest => dest.ThreadId, opt => opt.MapFrom(src => src.ThreadId))
                 .ForMember(dest => dest.Message, opt => opt.MapFrom(src => src.Snippet))
                 .ForMember(dest => dest.Gmail, opt => opt.MapFrom(src => "alerts@axisbank.com"))
-                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now)).ReverseMap();
 
         }
     }

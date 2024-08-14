@@ -6,10 +6,10 @@ namespace Tracker.Data.Entities
     {
         [Key]
         public Guid ExpenseId { get; set; }
-        public Guid ExpenseType { get; set; }
-        public string ExpenseTitle { get; set; }
+        public Guid CategoryId { get; set; }
+        public string ExpenseTitle { get; set; } = string.Empty;
         public decimal ExpenseAmount { get; set; }
-        public DateTime? ExpenseDate { get; set; }
+        public DateTime ExpenseDate { get; set; }
         public string? ExpenseDiscription { get; set; }
         public string? ExpenseImage { get; set; }
         public string? ExpenseTransaction { get; set; }

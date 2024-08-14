@@ -105,5 +105,16 @@ namespace Tracker.API.Controllers
 
             return Ok("Updated successfully");
         }
+
+        [HttpGet]
+        [Route("/all-mail")]
+        public async Task<IActionResult> GetAllExpense()
+        {
+            var result = await _mediator.Send(new GetAllMailsRequest());
+
+            List<EmailDto> mails = _mapper.Map<List<EmailDto>>(result);
+
+            return Ok(mails);
+        }
     }
 }

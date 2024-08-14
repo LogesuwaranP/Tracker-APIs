@@ -2,7 +2,7 @@
 {
     public class ExpenseRequestDto
     {
-        public Guid ExpenseType { get; set; }
+        public Guid CategoryId { get; set; }
         public string ExpenseTitle { get; set; } = string.Empty;
         public decimal ExpenseAmount { get; set; }
         public string? ExpenseDiscription { get; set; }

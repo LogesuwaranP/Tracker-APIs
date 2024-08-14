@@ -70,9 +70,9 @@ namespace Tracker.Infrastructure.Repositories
             List<Result> result =
             _dbContext.Categories
                 .GroupJoin(
-                    _dbContext.Expense,
+                    _dbContext.Expenses,
                     category => category.Id,
-                    expense => expense.ExpenseType,
+                    expense => expense.CategoryId,
                     (category, expenseGroup) => new Result
                     {
                         Id = category.Id,

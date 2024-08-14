@@ -21,7 +21,7 @@ namespace Tracker.Domain.Service.ExpenseFilter
         public IEnumerable<ExpenseResponseDto> FilterDates(DateTime startDate, DateTime endDate)
         {
 
-            var data = _dbContextExpense.Expense.Where(e => e.ExpenseCreatedDate >= startDate && e.ExpenseCreatedDate <= endDate)
+            var data = _dbContextExpense.Expenses.Where(e => e.ExpenseCreatedDate >= startDate && e.ExpenseCreatedDate <= endDate)
                          .ToList();
             if(data.Count > 0 )
             {
@@ -38,7 +38,7 @@ namespace Tracker.Domain.Service.ExpenseFilter
         public IEnumerable<ExpenseResponseDto> FilterByMonth(int month)
         {
 
-            var data = _dbContextExpense.Expense.Where(e => e.ExpenseCreatedDate.Month == month)
+            var data = _dbContextExpense.Expenses.Where(e => e.ExpenseCreatedDate.Month == month)
                          .ToList();
             if (data.Count > 0)
             {
@@ -55,7 +55,7 @@ namespace Tracker.Domain.Service.ExpenseFilter
         public IEnumerable<ExpenseResponseDto> FilterByType(Guid type)
         {
 
-            var data = _dbContextExpense.Expense.Where(e => e.ExpenseType == type)
+            var data = _dbContextExpense.Expenses.Where(e => e.CategoryId == type)
                          .ToList();
             if (data.Count > 0)
             {
@@ -72,7 +72,7 @@ namespace Tracker.Domain.Service.ExpenseFilter
         public IEnumerable<dynamic> Groupbytype()
         {
 
-            var data = _dbContextExpense.Expense.GroupBy(d => d.ExpenseType).Select(group => new 
+            var data = _dbContextExpense.Expenses.GroupBy(d => d.CategoryId).Select(group => new 
                             {
                                 type = group.Key,
                                 data = _mapper.Map<List<ExpenseResponseDto>>(group.ToList())

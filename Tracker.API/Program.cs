@@ -5,14 +5,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Tracker.Data.Commands;
 using Tracker.Data.Context;
 using Tracker.Data.Entities;
+using Tracker.Data.Queries;
 using Tracker.Data.Repository;
+using Tracker.Data.ResponseModels;
 using Tracker.Domain.Repository;
 using Tracker.Domain.Service;
 using Tracker.Domain.Service.ExpenseFilter;
 using Tracker.Domain.Service.ExpenseService;
 using Tracker.Domain.UseCase;
+using Tracker.Domain.UseCase.Budget;
+using Tracker.Domain.UseCase.Mails;
 using Tracker.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,12 +34,23 @@ builder.Services.AddScoped<IExpenseFilter, ExpenseFilter>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IDueRepository, DueRepository>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<IExpenseMailRepository, ExpenseMailRepository>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 
 builder.Services.AddScoped<IRequestHandler<GetAllDuesRequest, List<Due>?>, GetAllDuesUseCase>();
 builder.Services.AddScoped<IRequestHandler<GetDueByIdRequest, Due>, GetDueByIdUseCase>();
 builder.Services.AddScoped<IRequestHandler<AddDueCommand, Guid>, AddDueUseCase>();
 builder.Services.AddScoped<IRequestHandler<UpdateCommand, Guid>, UpdateDueByIdUseCase>();
 builder.Services.AddScoped<IRequestHandler<DeleteCommand, Guid>, DeleteDueByIdUseCase>();
+
+builder.Services.AddScoped<IRequestHandler<GetAllMailsRequest, List<ExpenseMail>>, GetAllMailsUseCase>();
+builder.Services.AddScoped<IRequestHandler<AddMailsCommand, Unit>, AddMailsUseCase>();
+builder.Services.AddScoped<IRequestHandler<CreateBudgetCommand, Guid>, CreateBudgetCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateBudgetCommand, Unit>, UpdateBudgetCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<DeleteBudgetCommand, Unit>, DeleteBudgetCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<GetBudgetByIdQuery, Budget>, GetBudgetByIdQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetBudgetsByCategoryAndDateQuery, IEnumerable<Budget>>, GetBudgetsByCategoryAndDateQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetBudgetsBetweenDatesQuery, IEnumerable<BudgetWithCategoryDetails>>,  GetBudgetsBetweenDatesQueryHandler>();
 
 builder.Services.AddDbContext<TrackerContext>(options =>
 {

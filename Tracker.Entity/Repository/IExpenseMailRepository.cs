@@ -6,5 +6,6 @@ namespace Tracker.Data.Repository
     public interface IExpenseMailRepository
     {
         Task AddExpenseAsync(List<ExpenseMail> mails);
+        Task<List<ExpenseMail>> GetAllExpenseMailAsync();
     }
 }

@@ -27,7 +27,7 @@ namespace Tracker.Domain.Service.ExpenseService
 
         public IEnumerable<ExpenseResponseDto> GetExpenseList()
         {
-            var data = _dbContextExpense.Expense.ToList();
+            var data = _dbContextExpense.Expenses.ToList();
 
             if(data.Count > 0)
             {
@@ -52,7 +52,7 @@ namespace Tracker.Domain.Service.ExpenseService
             Expense newExpense = _mapper.Map<Expense>(expense);
             newExpense.ExpenseCreatedDate = DateTime.Now;
             newExpense.ExpenseModifiedDate = DateTime.Now;
-            _dbContextExpense.Expense.Add(newExpense);
+            _dbContextExpense.Expenses.Add(newExpense);
 
             _dbContextExpense.SaveChanges();
 
@@ -62,7 +62,7 @@ namespace Tracker.Domain.Service.ExpenseService
 
         public Expense GetExpenseById(Guid id)
         {
-            Expense expense = _dbContextExpense.Expense.FirstOrDefault(x => x.ExpenseId == id);
+            Expense expense = _dbContextExpense.Expenses.FirstOrDefault(x => x.ExpenseId == id);
             if (expense == null)
             {
                 return null!;
@@ -87,7 +87,7 @@ namespace Tracker.Domain.Service.ExpenseService
             newExpense.ExpenseId = id;
             newExpense.ExpenseCreatedDate = exById.ExpenseCreatedDate;
             newExpense.ExpenseModifiedDate = DateTime.Now;
-            _dbContextExpense.Expense.Update(newExpense);
+            _dbContextExpense.Expenses.Update(newExpense);
 
             _dbContextExpense.SaveChanges();
 
@@ -104,14 +104,15 @@ namespace Tracker.Domain.Service.ExpenseService
 
         public async Task<List<ExpenseWithCategory>> GetExpensesWithCategoryAsync()
         {
-            return await _dbContextExpense.Expense
+            return await _dbContextExpense.Expenses
+                .Where(b => b.ExpenseDate.Month == 7 && b.ExpenseDate.Year == 2024)
                 .Join(_dbContextExpense.Categories,
-                      expense => expense.ExpenseType,
+                      expense => expense.CategoryId,
                       category => category.Id,
                       (expense, category) => new ExpenseWithCategory
                       {
                           ExpenseId = expense.ExpenseId,
-                          ExpenseType = expense.ExpenseType,
+                          CategoryId = expense.CategoryId,
                           ExpenseTitle = expense.ExpenseTitle,
                           ExpenseAmount = expense.ExpenseAmount,
                           ExpenseDate = expense.ExpenseDate,

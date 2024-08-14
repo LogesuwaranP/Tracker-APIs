@@ -9,7 +9,7 @@ namespace Tracker.Data.ResponseModels
     public class ExpenseWithCategory
     {
         public Guid ExpenseId { get; set; }
-        public Guid ExpenseType { get; set; }
+        public Guid CategoryId { get; set; }
         public string ExpenseTitle { get; set; }
         public decimal ExpenseAmount { get; set; }
         public DateTime? ExpenseDate { get; set; }
